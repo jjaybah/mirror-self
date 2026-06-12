@@ -1,177 +1,224 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import type { CSSProperties } from "react";
 
-type Interest = {
-  id: string;
+type Option = {
   label: string;
-  angle: string;
-  options: string[];
+  x: number;
+  y: number;
 };
 
-const interests: Interest[] = [
-  {
-    id: "coffee",
-    label: "Coffee",
-    angle: "top-[10%] left-[47%]",
-    options: ["V60 brewing app", "Neighborhood coffee shop", "Roastery planner"],
-  },
+type Theme = {
+  id: string;
+  label: string;
+  x: number;
+  y: number;
+  delay: string;
+  options: Option[];
+};
+
+const themes: Theme[] = [
   {
     id: "photography",
     label: "Photography",
-    angle: "top-[30%] right-[7%]",
-    options: ["Photo walk finder", "Portfolio critique tool", "Client moodboard maker"],
+    x: 66,
+    y: 34,
+    delay: "1.85s",
+    options: [
+      { label: "Camera", x: 79, y: 43 },
+      { label: "Film", x: 70, y: 25 },
+      { label: "Gallery", x: 73, y: 73 },
+      { label: "Portfolio critique", x: 61, y: 18 },
+    ],
+  },
+  {
+    id: "coffee",
+    label: "Coffee",
+    x: 51,
+    y: 72,
+    delay: "2.05s",
+    options: [
+      { label: "V60 app", x: 61, y: 80 },
+      { label: "Roastery", x: 41, y: 82 },
+      { label: "Coffee shop", x: 50, y: 90 },
+      { label: "Tasting journal", x: 67, y: 66 },
+    ],
   },
   {
     id: "gym",
     label: "Gym",
-    angle: "bottom-[18%] right-[18%]",
-    options: ["Adaptive workout coach", "Form feedback journal", "Gym buddy matcher"],
+    x: 65,
+    y: 50,
+    delay: "2.25s",
+    options: [
+      { label: "Form coach", x: 77, y: 51 },
+      { label: "Workout plan", x: 71, y: 65 },
+      { label: "Recovery", x: 58, y: 62 },
+      { label: "Buddy match", x: 78, y: 38 },
+    ],
   },
   {
     id: "music",
     label: "Music",
-    angle: "bottom-[16%] left-[15%]",
-    options: ["Practice routine builder", "Playlist story generator", "Local jam finder"],
+    x: 38,
+    y: 34,
+    delay: "2.45s",
+    options: [
+      { label: "Practice", x: 28, y: 27 },
+      { label: "Playlist", x: 27, y: 42 },
+      { label: "Local gigs", x: 36, y: 18 },
+      { label: "Jam finder", x: 18, y: 60 },
+    ],
   },
   {
     id: "ai",
     label: "AI",
-    angle: "top-[35%] left-[6%]",
-    options: ["Idea-to-prototype copilot", "Prompt library builder", "Personal automation desk"],
+    x: 34,
+    y: 50,
+    delay: "2.65s",
+    options: [
+      { label: "Prompt kit", x: 20, y: 48 },
+      { label: "Prototype copilot", x: 22, y: 29 },
+      { label: "Automation", x: 33, y: 66 },
+      { label: "Research desk", x: 18, y: 76 },
+    ],
   },
 ];
 
 export default function Home() {
-  const [selectedInterest, setSelectedInterest] = useState(interests[0]);
-  const [selectedOption, setSelectedOption] = useState(interests[0].options[0]);
+  const [labelsVisible, setLabelsVisible] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
+  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const productPrompt = useMemo(() => {
-    return `Build a polished web app for a curious builder whose interests include ${interests
-      .map((interest) => interest.label.toLowerCase())
-      .join(", ")}. Focus the first prototype on ${selectedInterest.label.toLowerCase()}: ${selectedOption.toLowerCase()}. Create a product that turns this interest into a concrete, useful AI-powered experience with onboarding, a clear core workflow, and a delightful visual identity.`;
-  }, [selectedInterest, selectedOption]);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setLabelsVisible(true), 1700);
+    return () => window.clearTimeout(timer);
+  }, []);
 
-  function chooseInterest(interest: Interest) {
-    setSelectedInterest(interest);
-    setSelectedOption(interest.options[0]);
+  const activeTheme = selectedTheme ?? themes[0];
+  const activeOption = selectedOption ?? activeTheme.options[0];
+
+  const productPrompt = useMemo(() => {
+    return `Build an AI-powered web app for a person whose interests orbit around ${themes
+      .map((theme) => theme.label.toLowerCase())
+      .join(", ")}. Focus the first product direction on ${activeTheme.label.toLowerCase()}: ${activeOption.label.toLowerCase()}. The app should feel personal, visual, and exploratory: start with questions, map the user's themes around a central persona, disclose deeper options on click, and end with a high-quality build prompt for Codex.`;
+  }, [activeOption.label, activeTheme.label]);
+
+  function chooseTheme(theme: Theme) {
+    setSelectedTheme(theme);
+    setSelectedOption(theme.options[0]);
     setCopied(false);
   }
 
   async function copyPrompt() {
     try {
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(productPrompt);
-      }
+      await navigator.clipboard?.writeText(productPrompt);
     } catch {
-      // Clipboard permissions vary by browser context; still confirm the click.
+      // Clipboard permissions vary in preview browsers.
     }
 
     setCopied(true);
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f4ef] text-[#1f2523]">
-      <section className="mx-auto grid min-h-screen w-full max-w-7xl grid-cols-1 gap-8 px-5 py-6 md:grid-cols-[1.08fr_0.92fr] md:px-8 lg:px-10">
-        <div className="flex min-h-[620px] flex-col rounded-[8px] border border-[#d8d2c8] bg-[#fffaf2] p-4 shadow-sm md:p-6">
-          <header className="flex items-center justify-between gap-4">
-            <div>
-              <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#6d7166]">
-                Mirror Self
-              </p>
-              <h1 className="mt-2 max-w-2xl text-4xl font-semibold leading-[1.04] md:text-6xl">
-                Discover the product only you would build.
-              </h1>
-            </div>
-            <div className="hidden h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#cfc7ba] bg-[#e9f0db] text-lg font-semibold md:flex">
-              MS
-            </div>
-          </header>
+    <main className="relative min-h-screen overflow-hidden bg-[#08082b] text-white">
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,#050329_0%,#242147_44%,#9f9a99_100%)]" />
+      <div className="absolute inset-0 opacity-[0.09] [background-image:repeating-linear-gradient(0deg,transparent_0,transparent_3px,#ffffff_4px)]" />
+      <div className="absolute inset-0 radar-crosshair" />
 
-          <div className="relative mt-8 flex flex-1 items-center justify-center overflow-hidden rounded-[8px] border border-[#ded6c9] bg-[#f2eadc] p-4">
-            <div className="absolute inset-8 rounded-full border border-dashed border-[#b9b09f]" />
-            <div className="absolute inset-20 rounded-full border border-dashed border-[#cbc2b0]" />
+      <section className="relative z-10 flex min-h-screen flex-col">
+        <header className="flex items-center justify-between px-5 py-5 text-xs uppercase tracking-[0.28em] text-white/58 md:px-8">
+          <span>Mirror Self</span>
+          <span>{labelsVisible ? "themes detected" : "listening..."}</span>
+        </header>
+
+        <div className="relative flex flex-1 items-center justify-center px-4 pb-6">
+          <div className="radar-stage">
+            <div className="radar-ring radar-ring-one" />
+            <div className="radar-ring radar-ring-two" />
+            <div className="radar-ring radar-ring-three" />
+            <div className="radar-ring radar-ring-four" />
+            <div className="radar-sweep" />
 
             <button
-              className="relative z-10 flex h-36 w-36 items-center justify-center rounded-full border border-[#1f2523] bg-[#1f2523] text-center text-lg font-semibold text-white shadow-xl shadow-[#887e6e]/20"
+              aria-label="Your persona"
+              className="persona-node"
               type="button"
             >
-              You
+              <span className="persona-avatar">You</span>
             </button>
 
-            {interests.map((interest) => {
-              const active = selectedInterest.id === interest.id;
+            {themes.map((theme) => {
+              const active = activeTheme.id === theme.id;
 
               return (
                 <button
-                  className={`absolute ${interest.angle} z-20 flex h-24 w-24 items-center justify-center rounded-full border text-sm font-semibold transition ${
-                    active
-                      ? "border-[#1f2523] bg-[#d4f2a8] text-[#1f2523] shadow-lg shadow-[#7f9363]/20"
-                      : "border-[#c8bfad] bg-white text-[#42483f] hover:border-[#1f2523]"
+                  className={`theme-node ${active ? "theme-node-active" : ""} ${
+                    labelsVisible ? "theme-node-ready" : ""
                   }`}
-                  key={interest.id}
-                  onClick={() => chooseInterest(interest)}
+                  key={theme.id}
+                  onClick={() => chooseTheme(theme)}
+                  style={
+                    {
+                      "--x": `${theme.x}%`,
+                      "--y": `${theme.y}%`,
+                      "--delay": theme.delay,
+                  } as CSSProperties
+                  }
                   type="button"
                 >
-                  {interest.label}
+                  <span className="thinking-dot" />
+                  <span className="theme-label">{theme.label}</span>
+                </button>
+              );
+            })}
+
+            {selectedTheme?.options.map((option, index) => {
+              const active = activeOption.label === option.label;
+
+              return (
+                <button
+                  className={`option-node ${active ? "option-node-active" : ""}`}
+                  key={option.label}
+                  onClick={() => {
+                    setSelectedOption(option);
+                    setCopied(false);
+                  }}
+                  style={
+                    {
+                      "--x": `${option.x}%`,
+                      "--y": `${option.y}%`,
+                      "--delay": `${index * 90}ms`,
+                  } as CSSProperties
+                  }
+                  type="button"
+                >
+                  {option.label}
                 </button>
               );
             })}
           </div>
         </div>
 
-        <aside className="flex min-h-[620px] flex-col gap-4">
-          <section className="rounded-[8px] border border-[#d8d2c8] bg-white p-5 shadow-sm">
-            <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#6d7166]">
-              Follow-up
+        <aside className="relative z-20 mx-auto mb-5 flex w-[min(1120px,calc(100%-32px))] flex-col gap-3 rounded-[8px] border border-white/14 bg-[#14142c]/72 p-4 shadow-2xl shadow-black/25 backdrop-blur-md md:flex-row md:items-center md:justify-between">
+          <div className="max-w-3xl">
+            <p className="text-xs uppercase tracking-[0.24em] text-white/52">
+              {selectedTheme ? `${activeTheme.label} disclosure` : "Click a theme to disclose options"}
             </p>
-            <h2 className="mt-2 text-2xl font-semibold">
-              What could {selectedInterest.label.toLowerCase()} become?
-            </h2>
-
-            <div className="mt-5 grid gap-3">
-              {selectedInterest.options.map((option) => (
-                <button
-                  className={`rounded-[8px] border px-4 py-3 text-left text-sm font-medium transition ${
-                    selectedOption === option
-                      ? "border-[#1f2523] bg-[#1f2523] text-white"
-                      : "border-[#ded6c9] bg-[#fffaf2] text-[#343a35] hover:border-[#1f2523]"
-                  }`}
-                  key={option}
-                  onClick={() => {
-                    setSelectedOption(option);
-                    setCopied(false);
-                  }}
-                  type="button"
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </section>
-
-          <section className="flex flex-1 flex-col rounded-[8px] border border-[#d8d2c8] bg-[#e8f4f3] p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#536461]">
-                  Generated brief
-                </p>
-                <h2 className="mt-2 text-2xl font-semibold">Prompt for Codex</h2>
-              </div>
-              <button
-                className="rounded-[8px] border border-[#1f2523] bg-white px-4 py-2 text-sm font-semibold text-[#1f2523] transition hover:bg-[#1f2523] hover:text-white"
-                onClick={copyPrompt}
-                type="button"
-              >
-                {copied ? "Copied" : "Copy"}
-              </button>
-            </div>
-
-            <p className="mt-5 flex-1 rounded-[8px] border border-[#bed2ce] bg-white p-4 text-base leading-7 text-[#27312f]">
+            <p className="mt-2 line-clamp-4 text-sm leading-6 text-white/82 md:text-base">
               {productPrompt}
             </p>
-          </section>
+          </div>
+
+          <button
+            className="shrink-0 rounded-[8px] border border-white/22 bg-white px-4 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#16162e] transition hover:bg-[#f5bf4b]"
+            onClick={copyPrompt}
+            type="button"
+          >
+            {copied ? "Copied" : "Copy prompt"}
+          </button>
         </aside>
       </section>
     </main>
