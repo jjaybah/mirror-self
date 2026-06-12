@@ -137,8 +137,6 @@ button {
   background:
     radial-gradient(circle at 50% 18%, rgb(255 255 255 / 0.22), transparent 28%),
     linear-gradient(160deg, #953c67, #1b2230 62%);
-  font-size: clamp(1.72rem, 3.3vw, 2.5rem);
-  font-weight: 700;
 }
 
 .persona-label {
@@ -428,6 +426,8 @@ button {
   }
 
   .intro-panel {
-    top: 54%;
+    top: 48%;
+    max-height: calc(100svh - 120px);
+    overflow-y: auto;
   }
 }

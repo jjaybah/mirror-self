@@ -32,8 +32,6 @@ type Theme = {
 const defaultIntro =
   "I work with creative technology. I like photography, coffee, music, gym, and AI tools. I want to build something useful, personal, and visually memorable.";
 
-const avatars = ["🧑‍🚀", "🧑‍🎨", "🧑‍💻", "🧑‍🔬", "🧑‍🍳", "🧑‍🎤", "🧑‍🏫", "🧑‍🚲"];
-
 const themes: Theme[] = [
   {
     emoji: "📷",
@@ -212,7 +210,6 @@ type Phase = "boot" | "intro" | "scanning" | "selecting" | "complete";
 export default function Home() {
   const [phase, setPhase] = useState<Phase>("boot");
   const [intro, setIntro] = useState(defaultIntro);
-  const [avatar, setAvatar] = useState(avatars[0]);
   const [themeLabelsVisible, setThemeLabelsVisible] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [selectedDirection, setSelectedDirection] = useState<Direction | null>(null);
@@ -220,14 +217,8 @@ export default function Home() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    const avatarTimer = window.setTimeout(() => {
-      setAvatar(avatars[Math.floor(Math.random() * avatars.length)]);
-    }, 0);
     const timer = window.setTimeout(() => setPhase("intro"), 1400);
-    return () => {
-      window.clearTimeout(avatarTimer);
-      window.clearTimeout(timer);
-    };
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -388,7 +379,7 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
         </header>
 
         <div
-          className="relative flex flex-1 items-center justify-center px-4 pb-6"
+          className="relative flex flex-1 items-center justify-center overflow-y-auto px-4 pb-6"
           onClick={resetSelections}
         >
           <div className="radar-stage" onClick={resetSelections}>
@@ -437,9 +428,7 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
               onClick={stopCanvasReset}
               type="button"
             >
-              <span className="persona-avatar" aria-hidden="true">
-                {avatar}
-              </span>
+              <span className="persona-avatar" aria-hidden="true" />
               <span className="persona-label">You</span>
             </button>
 
@@ -559,7 +548,7 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
           )}
         </div>
 
-        <aside className="relative z-20 mx-auto mb-5 flex w-[min(1120px,calc(100%-32px))] flex-col gap-3 rounded-[8px] border border-white/14 bg-[#14142c]/72 p-4 shadow-2xl shadow-black/25 backdrop-blur-md md:flex-row md:items-center md:justify-between">
+        <aside className={`${phase === "intro" ? "hidden" : "flex"} relative z-20 mx-auto mb-5 w-[min(1120px,calc(100%-32px))] flex-col gap-3 rounded-[8px] border border-white/14 bg-[#14142c]/72 p-4 shadow-2xl shadow-black/25 backdrop-blur-md md:flex-row md:items-center md:justify-between`}>
           <div className="max-w-3xl">
             <p className="text-xs uppercase tracking-[0.24em] text-white/52">
               {phase === "complete"
