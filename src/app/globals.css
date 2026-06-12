@@ -100,7 +100,7 @@ button {
 
 .connection-line {
   stroke-linecap: round;
-  stroke-width: 1.5;
+  stroke-width: 1;
   filter: drop-shadow(0 0 10px rgb(245 191 75 / 0.34));
   animation:
     line-draw 520ms ease both,
