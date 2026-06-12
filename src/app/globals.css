@@ -83,14 +83,9 @@ button {
   animation-delay: 360ms;
 }
 
-.radar-ring-four {
-  --ring-inset: 6%;
-  animation-delay: 480ms;
-}
-
 .radar-sweep {
   position: absolute;
-  inset: 6%;
+  inset: 12%;
   border-radius: 999px;
   background: conic-gradient(from 230deg, transparent 0deg, rgb(245 191 75 / 0.16) 18deg, transparent 52deg);
   mix-blend-mode: screen;
@@ -152,6 +147,7 @@ button {
   border: 0;
   background: transparent;
   color: white;
+  transition: opacity 260ms ease, filter 260ms ease;
 }
 
 .thinking-dot {
@@ -210,6 +206,11 @@ button {
   color: #171323;
 }
 
+.node-dimmed {
+  filter: grayscale(1);
+  opacity: 0.1;
+}
+
 .option-node {
   border: 1px solid rgb(255 255 255 / 0.16);
   border-radius: 999px;
@@ -225,7 +226,18 @@ button {
   padding: 0.68rem 1rem;
   text-transform: uppercase;
   opacity: 0;
+  transition: opacity 260ms ease, filter 260ms ease, background-color 180ms ease, color 180ms ease;
   animation: option-disclose 460ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--delay) both;
+}
+
+.layer-two {
+  z-index: 11;
+}
+
+.layer-three {
+  z-index: 12;
+  font-size: clamp(0.6rem, 0.86vw, 0.72rem);
+  padding: 0.58rem 0.82rem;
 }
 
 .option-node-active,
@@ -233,6 +245,22 @@ button {
   border-color: rgb(245 191 75 / 0.9);
   background: rgb(245 191 75 / 0.95);
   color: #171323;
+}
+
+.intro-panel {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  top: 50%;
+  width: min(470px, calc(100% - 32px));
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 8px;
+  background: rgb(20 20 44 / 0.78);
+  box-shadow: 0 26px 80px rgb(0 0 0 / 0.34);
+  padding: 1.25rem;
+  transform: translate(-50%, -26%);
+  backdrop-filter: blur(18px);
+  animation: panel-rise 560ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 @keyframes stage-arrive {
@@ -313,13 +341,47 @@ button {
   }
 }
 
+@keyframes panel-rise {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -18%) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -26%) scale(1);
+  }
+}
+
 @media (max-width: 720px) {
   .radar-stage {
-    width: min(100vw, 540px);
+    width: min(112vw, 520px);
   }
 
   .theme-label,
   .option-node {
     padding: 0.64rem 0.82rem;
+  }
+
+  .theme-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+  }
+
+  .option-node {
+    max-width: 136px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.08;
+  }
+
+  .layer-three {
+    max-width: 112px;
+    padding: 0.56rem 0.72rem;
+    font-size: 0.58rem;
+  }
+
+  .intro-panel {
+    top: 54%;
   }
 }
