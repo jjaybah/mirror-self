@@ -1,9 +1,10 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, MouseEvent as ReactMouseEvent, useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 
 type ProductSignal = {
+  emoji: string;
   label: string;
   x: number;
   y: number;
@@ -11,6 +12,7 @@ type ProductSignal = {
 };
 
 type Direction = {
+  emoji: string;
   label: string;
   x: number;
   y: number;
@@ -18,6 +20,7 @@ type Direction = {
 };
 
 type Theme = {
+  emoji: string;
   id: string;
   label: string;
   x: number;
@@ -29,8 +32,11 @@ type Theme = {
 const defaultIntro =
   "I work with creative technology. I like photography, coffee, music, gym, and AI tools. I want to build something useful, personal, and visually memorable.";
 
+const avatars = ["🧑‍🚀", "🧑‍🎨", "🧑‍💻", "🧑‍🔬", "🧑‍🍳", "🧑‍🎤", "🧑‍🏫", "🧑‍🚲"];
+
 const themes: Theme[] = [
   {
+    emoji: "📷",
     id: "photography",
     label: "Photography",
     x: 66,
@@ -38,35 +44,39 @@ const themes: Theme[] = [
     delay: "180ms",
     directions: [
       {
+        emoji: "📸",
         label: "Camera",
         x: 80,
         y: 42,
         products: [
-          { label: "Gear matcher", x: 88, y: 35, idea: "a camera gear recommender based on mood, budget, and shooting style" },
-          { label: "Shot planner", x: 90, y: 47, idea: "a shoot planning app that turns a location and mood into a shot list" },
+          { emoji: "🎒", label: "Gear matcher", x: 88, y: 35, idea: "a camera gear recommender based on mood, budget, and shooting style" },
+          { emoji: "🗺️", label: "Shot planner", x: 90, y: 47, idea: "a shoot planning app that turns a location and mood into a shot list" },
         ],
       },
       {
+        emoji: "🎞️",
         label: "Film",
         x: 72,
         y: 24,
         products: [
-          { label: "Film diary", x: 78, y: 14, idea: "a film photography diary that learns your taste and suggests rolls, settings, and locations" },
-          { label: "Color lab", x: 62, y: 17, idea: "a color grading assistant trained around your favorite film looks" },
+          { emoji: "📓", label: "Film diary", x: 78, y: 14, idea: "a film photography diary that learns your taste and suggests rolls, settings, and locations" },
+          { emoji: "🎨", label: "Color lab", x: 62, y: 17, idea: "a color grading assistant trained around your favorite film looks" },
         ],
       },
       {
+        emoji: "🖼️",
         label: "Gallery",
         x: 74,
         y: 66,
         products: [
-          { label: "Curator", x: 86, y: 68, idea: "an AI curator that turns a photo dump into a coherent portfolio story" },
-          { label: "Critique room", x: 70, y: 78, idea: "a private critique room that gives precise feedback on composition and sequencing" },
+          { emoji: "🧭", label: "Curator", x: 86, y: 68, idea: "an AI curator that turns a photo dump into a coherent portfolio story" },
+          { emoji: "💬", label: "Critique room", x: 70, y: 78, idea: "a private critique room that gives precise feedback on composition and sequencing" },
         ],
       },
     ],
   },
   {
+    emoji: "☕",
     id: "coffee",
     label: "Coffee",
     x: 51,
@@ -74,35 +84,39 @@ const themes: Theme[] = [
     delay: "300ms",
     directions: [
       {
+        emoji: "🫖",
         label: "Brewing",
         x: 68,
         y: 79,
         products: [
-          { label: "V60 coach", x: 83, y: 84, idea: "a V60 brewing coach that adapts recipes from taste notes and grind size" },
-          { label: "Taste tracker", x: 64, y: 95, idea: "a tasting journal that learns your coffee preferences and suggests recipes" },
+          { emoji: "💧", label: "V60 coach", x: 83, y: 84, idea: "a V60 brewing coach that adapts recipes from taste notes and grind size" },
+          { emoji: "👅", label: "Taste tracker", x: 64, y: 95, idea: "a tasting journal that learns your coffee preferences and suggests recipes" },
         ],
       },
       {
+        emoji: "🔥",
         label: "Roastery",
         x: 32,
         y: 80,
         products: [
-          { label: "Roast log", x: 18, y: 86, idea: "a roast log assistant that explains roast curves in plain language" },
-          { label: "Bean finder", x: 28, y: 68, idea: "a bean discovery app based on flavor memories instead of generic ratings" },
+          { emoji: "📈", label: "Roast log", x: 18, y: 86, idea: "a roast log assistant that explains roast curves in plain language" },
+          { emoji: "🫘", label: "Bean finder", x: 28, y: 68, idea: "a bean discovery app based on flavor memories instead of generic ratings" },
         ],
       },
       {
+        emoji: "🏪",
         label: "Cafe",
         x: 50,
         y: 88,
         products: [
-          { label: "Menu lab", x: 72, y: 96, idea: "a cafe menu lab that creates seasonal drinks from local taste signals" },
-          { label: "Shop planner", x: 29, y: 96, idea: "a tiny coffee shop planner for layout, menu, and launch tasks" },
+          { emoji: "🧪", label: "Menu lab", x: 72, y: 96, idea: "a cafe menu lab that creates seasonal drinks from local taste signals" },
+          { emoji: "📐", label: "Shop planner", x: 29, y: 96, idea: "a tiny coffee shop planner for layout, menu, and launch tasks" },
         ],
       },
     ],
   },
   {
+    emoji: "💪",
     id: "gym",
     label: "Gym",
     x: 66,
@@ -110,26 +124,29 @@ const themes: Theme[] = [
     delay: "420ms",
     directions: [
       {
+        emoji: "🏋️",
         label: "Training",
         x: 78,
         y: 52,
         products: [
-          { label: "Plan coach", x: 89, y: 56, idea: "an adaptive workout planner that changes based on energy, soreness, and goals" },
-          { label: "Habit loop", x: 82, y: 66, idea: "a habit loop tracker that makes fitness consistency feel game-like" },
+          { emoji: "🗓️", label: "Plan coach", x: 89, y: 56, idea: "an adaptive workout planner that changes based on energy, soreness, and goals" },
+          { emoji: "🔁", label: "Habit loop", x: 82, y: 66, idea: "a habit loop tracker that makes fitness consistency feel game-like" },
         ],
       },
       {
+        emoji: "🧘",
         label: "Form",
         x: 76,
         y: 38,
         products: [
-          { label: "Lift journal", x: 88, y: 30, idea: "a lifting journal that turns notes into form cues and next-session focus" },
-          { label: "Mobility map", x: 69, y: 28, idea: "a mobility map that links pain points to warmups and recovery plans" },
+          { emoji: "📔", label: "Lift journal", x: 88, y: 30, idea: "a lifting journal that turns notes into form cues and next-session focus" },
+          { emoji: "🧩", label: "Mobility map", x: 69, y: 28, idea: "a mobility map that links pain points to warmups and recovery plans" },
         ],
       },
     ],
   },
   {
+    emoji: "🎵",
     id: "music",
     label: "Music",
     x: 38,
@@ -137,26 +154,29 @@ const themes: Theme[] = [
     delay: "540ms",
     directions: [
       {
+        emoji: "🎹",
         label: "Practice",
         x: 28,
         y: 26,
         products: [
-          { label: "Routine", x: 20, y: 17, idea: "a practice routine builder that adapts to your mood and available time" },
-          { label: "Progress", x: 35, y: 15, idea: "a music progress diary that notices patterns in what you avoid practicing" },
+          { emoji: "⏱️", label: "Routine", x: 20, y: 17, idea: "a practice routine builder that adapts to your mood and available time" },
+          { emoji: "📊", label: "Progress", x: 35, y: 15, idea: "a music progress diary that notices patterns in what you avoid practicing" },
         ],
       },
       {
+        emoji: "🔎",
         label: "Discovery",
         x: 24,
         y: 43,
         products: [
-          { label: "Playlist story", x: 14, y: 40, idea: "a playlist story generator that turns taste into shareable listening journeys" },
-          { label: "Jam finder", x: 17, y: 56, idea: "a local jam finder that matches musicians by taste, skill, and availability" },
+          { emoji: "📻", label: "Playlist story", x: 14, y: 40, idea: "a playlist story generator that turns taste into shareable listening journeys" },
+          { emoji: "🎸", label: "Jam finder", x: 17, y: 56, idea: "a local jam finder that matches musicians by taste, skill, and availability" },
         ],
       },
     ],
   },
   {
+    emoji: "✨",
     id: "ai",
     label: "AI",
     x: 34,
@@ -164,21 +184,23 @@ const themes: Theme[] = [
     delay: "660ms",
     directions: [
       {
+        emoji: "🛠️",
         label: "Build",
         x: 22,
         y: 50,
         products: [
-          { label: "Idea forge", x: 12, y: 45, idea: "an idea-to-prototype copilot that generates build prompts from personal interests" },
-          { label: "MVP brief", x: 16, y: 62, idea: "an MVP brief generator that turns a messy idea into a buildable product spec" },
+          { emoji: "⚒️", label: "Idea forge", x: 12, y: 45, idea: "an idea-to-prototype copilot that generates build prompts from personal interests" },
+          { emoji: "📝", label: "MVP brief", x: 16, y: 62, idea: "an MVP brief generator that turns a messy idea into a buildable product spec" },
         ],
       },
       {
+        emoji: "⚙️",
         label: "Automate",
         x: 30,
         y: 66,
         products: [
-          { label: "Life ops", x: 18, y: 74, idea: "a personal automation desk for recurring admin, reminders, and research" },
-          { label: "Prompt vault", x: 40, y: 78, idea: "a prompt vault that organizes prompts by goal, taste, and past usefulness" },
+          { emoji: "🗂️", label: "Life ops", x: 18, y: 74, idea: "a personal automation desk for recurring admin, reminders, and research" },
+          { emoji: "🔐", label: "Prompt vault", x: 40, y: 78, idea: "a prompt vault that organizes prompts by goal, taste, and past usefulness" },
         ],
       },
     ],
@@ -190,6 +212,7 @@ type Phase = "boot" | "intro" | "scanning" | "selecting" | "complete";
 export default function Home() {
   const [phase, setPhase] = useState<Phase>("boot");
   const [intro, setIntro] = useState(defaultIntro);
+  const [avatar, setAvatar] = useState(avatars[0]);
   const [themeLabelsVisible, setThemeLabelsVisible] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [selectedDirection, setSelectedDirection] = useState<Direction | null>(null);
@@ -197,8 +220,14 @@ export default function Home() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    const avatarTimer = window.setTimeout(() => {
+      setAvatar(avatars[Math.floor(Math.random() * avatars.length)]);
+    }, 0);
     const timer = window.setTimeout(() => setPhase("intro"), 1400);
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(avatarTimer);
+      window.clearTimeout(timer);
+    };
   }, []);
 
   useEffect(() => {
@@ -210,6 +239,25 @@ export default function Home() {
     }, 1700);
 
     return () => window.clearTimeout(revealTimer);
+  }, [phase]);
+
+  useEffect(() => {
+    function handleEmptyPageClick(event: globalThis.MouseEvent) {
+      if (phase !== "selecting" && phase !== "complete") return;
+
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      if (target.closest("button, a, textarea, input, form")) return;
+
+      setSelectedTheme(null);
+      setSelectedDirection(null);
+      setSelectedProduct(null);
+      setCopied(false);
+      setPhase("selecting");
+    }
+
+    document.addEventListener("click", handleEmptyPageClick);
+    return () => document.removeEventListener("click", handleEmptyPageClick);
   }, [phase]);
 
   const selectionsCount =
@@ -224,8 +272,41 @@ export default function Home() {
   const productPrompt = useMemo(() => {
     if (!activeTheme || !activeDirection || !activeProduct) return "";
 
-    return `Build a polished AI-powered web app for this person: "${intro}". They selected ${activeTheme.label} -> ${activeDirection.label} -> ${activeProduct.label}. Product idea: ${activeProduct.idea}. Create the app as a visually rich personal discovery tool with a central avatar/radar map, smooth onboarding questions, a maximum of three idea layers, clear selection states, and a final prompt/copy flow. Prioritize a demoable MVP with elegant motion, readable UI, and one core workflow that helps the user turn interests into something they can build with Codex.`;
+    return `Build this product with Codex:
+
+Product idea
+${activeProduct.idea}.
+
+Who it is for
+Someone who described themselves like this: "${intro}"
+
+Chosen path
+${activeTheme.emoji} ${activeTheme.label} -> ${activeDirection.emoji} ${activeDirection.label} -> ${activeProduct.emoji} ${activeProduct.label}
+
+What to build
+A friendly AI-powered web app that helps a non-technical person turn their own interests into a product idea they can actually build.
+
+Core experience
+1. Start with a short introduction prompt.
+2. Show a central avatar with interest circles around it.
+3. Let the user choose a maximum of three layers.
+4. Explain the final product idea in clear language.
+5. Provide a copyable prompt and a way to continue in Codex.
+
+Design direction
+Make it visual, calm, accessible, and easy to understand. Use clear labels, strong contrast, readable spacing, and simple language.`;
   }, [activeDirection, activeProduct, activeTheme, intro]);
+
+  const readableBrief = useMemo(() => {
+    if (!activeTheme || !activeDirection || !activeProduct) return null;
+
+    return {
+      idea: activeProduct.idea,
+      path: `${activeTheme.emoji} ${activeTheme.label} → ${activeDirection.emoji} ${activeDirection.label} → ${activeProduct.emoji} ${activeProduct.label}`,
+      audience: "People who want to build with AI but need a clear product idea based on their own interests.",
+      nextStep: "Copy this prompt or open it in Codex to start building.",
+    };
+  }, [activeDirection, activeProduct, activeTheme]);
 
   const codexHref = productPrompt
     ? `https://chatgpt.com/codex?prompt=${encodeURIComponent(productPrompt)}`
@@ -260,6 +341,20 @@ export default function Home() {
     setPhase("complete");
   }
 
+  function resetSelections() {
+    if (phase !== "selecting" && phase !== "complete") return;
+
+    setSelectedTheme(null);
+    setSelectedDirection(null);
+    setSelectedProduct(null);
+    setCopied(false);
+    setPhase("selecting");
+  }
+
+  function stopCanvasReset(event: ReactMouseEvent<HTMLElement>) {
+    event.stopPropagation();
+  }
+
   async function copyPrompt() {
     if (!productPrompt) return;
 
@@ -292,15 +387,60 @@ export default function Home() {
           </span>
         </header>
 
-        <div className="relative flex flex-1 items-center justify-center px-4 pb-6">
-          <div className="radar-stage">
+        <div
+          className="relative flex flex-1 items-center justify-center px-4 pb-6"
+          onClick={resetSelections}
+        >
+          <div className="radar-stage" onClick={resetSelections}>
+            <div className="stage-crosshair" />
             <div className="radar-ring radar-ring-one" />
             <div className="radar-ring radar-ring-two" />
             <div className="radar-ring radar-ring-three" />
-            <div className="radar-sweep" />
 
-            <button aria-label="Your persona" className="persona-node" type="button">
-              <span className="persona-avatar">You</span>
+            <svg
+              aria-hidden="true"
+              className="connection-lines"
+              viewBox="0 0 100 100"
+            >
+              {selectedTheme && (
+                <line
+                  className="connection-line"
+                  x1="50"
+                  x2={selectedTheme.x}
+                  y1="50"
+                  y2={selectedTheme.y}
+                />
+              )}
+              {selectedTheme && selectedDirection && (
+                <line
+                  className="connection-line"
+                  x1={selectedTheme.x}
+                  x2={selectedDirection.x}
+                  y1={selectedTheme.y}
+                  y2={selectedDirection.y}
+                />
+              )}
+              {selectedDirection && selectedProduct && (
+                <line
+                  className="connection-line"
+                  x1={selectedDirection.x}
+                  x2={selectedProduct.x}
+                  y1={selectedDirection.y}
+                  y2={selectedProduct.y}
+                />
+              )}
+            </svg>
+
+            <button
+              aria-label="Your persona"
+              className="persona-node"
+              onClick={stopCanvasReset}
+              type="button"
+            >
+              <span className="persona-avatar" aria-hidden="true">
+                {avatar}
+              </span>
+              <span className="persona-label">You</span>
             </button>
 
             {(phase === "scanning" || phase === "selecting" || phase === "complete") &&
@@ -314,7 +454,10 @@ export default function Home() {
                       dimmed ? "node-dimmed" : ""
                     } ${themeLabelsVisible ? "theme-node-ready" : ""}`}
                     key={theme.id}
-                    onClick={() => chooseTheme(theme)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      chooseTheme(theme);
+                    }}
                     style={
                       {
                         "--x": `${theme.x}%`,
@@ -325,7 +468,10 @@ export default function Home() {
                     type="button"
                   >
                     <span className="thinking-dot" />
-                    <span className="theme-label">{theme.label}</span>
+                    <span className="theme-label">
+                      <span aria-hidden="true">{theme.emoji}</span>
+                      {theme.label}
+                    </span>
                   </button>
                 );
               })}
@@ -340,7 +486,10 @@ export default function Home() {
                     dimmed ? "node-dimmed" : ""
                   }`}
                   key={direction.label}
-                  onClick={() => chooseDirection(direction)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    chooseDirection(direction);
+                  }}
                   style={
                     {
                       "--x": `${direction.x}%`,
@@ -350,6 +499,7 @@ export default function Home() {
                   }
                   type="button"
                 >
+                  <span aria-hidden="true">{direction.emoji}</span>
                   {direction.label}
                 </button>
               );
@@ -365,7 +515,10 @@ export default function Home() {
                     dimmed ? "node-dimmed" : ""
                   }`}
                   key={product.label}
-                  onClick={() => chooseProduct(product)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    chooseProduct(product);
+                  }}
                   style={
                     {
                       "--x": `${product.x}%`,
@@ -375,6 +528,7 @@ export default function Home() {
                   }
                   type="button"
                 >
+                  <span aria-hidden="true">{product.emoji}</span>
                   {product.label}
                 </button>
               );
@@ -382,7 +536,7 @@ export default function Home() {
           </div>
 
           {phase === "intro" && (
-            <form className="intro-panel" onSubmit={startScan}>
+            <form className="intro-panel" onClick={stopCanvasReset} onSubmit={startScan}>
               <p className="text-xs uppercase tracking-[0.24em] text-white/50">
                 Introduce yourself
               </p>
@@ -418,17 +572,36 @@ export default function Home() {
                       ? "Step 0"
                       : "Select first layer"}
             </p>
-            <p className="mt-2 line-clamp-4 text-sm leading-6 text-white/82 md:text-base">
-              {phase === "complete"
-                ? productPrompt
-                : phase === "intro"
+            {phase === "complete" && readableBrief ? (
+              <div className="mt-3 grid gap-3 text-sm leading-6 text-white/84 md:grid-cols-2">
+                <div>
+                  <span className="brief-label">Idea</span>
+                  <p>{readableBrief.idea}.</p>
+                </div>
+                <div>
+                  <span className="brief-label">Path</span>
+                  <p>{readableBrief.path}</p>
+                </div>
+                <div>
+                  <span className="brief-label">Who it helps</span>
+                  <p>{readableBrief.audience}</p>
+                </div>
+                <div>
+                  <span className="brief-label">Next step</span>
+                  <p>{readableBrief.nextStep}</p>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-2 text-sm leading-6 text-white/82 md:text-base">
+                {phase === "intro"
                   ? "Start by describing yourself. The radar will then think, place your first themes, and ask you to choose three layers."
                   : selectedDirection
                     ? `Layer 3: choose the product signal inside ${selectedDirection.label.toLowerCase()}.`
                     : selectedTheme
                       ? `Layer 2: choose what ${selectedTheme.label.toLowerCase()} means for this product. Other themes stay visible at 10% so your path is clear.`
-                      : "Layer 1: choose the strongest theme around your persona."}
-            </p>
+                      : "Layer 1: choose the strongest theme around your persona. Click empty space to clear the path."}
+              </p>
+            )}
           </div>
 
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
