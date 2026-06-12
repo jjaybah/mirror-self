@@ -359,13 +359,13 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#08082b] text-white">
+    <main className="relative h-[100svh] overflow-hidden bg-[#08082b] text-white">
       <div className="absolute inset-0 bg-[linear-gradient(180deg,#050329_0%,#242147_44%,#9f9a99_100%)]" />
       <div className="absolute inset-0 opacity-[0.09] [background-image:repeating-linear-gradient(0deg,transparent_0,transparent_3px,#ffffff_4px)]" />
       <div className="absolute inset-0 radar-crosshair" />
 
-      <section className="relative z-10 flex min-h-screen flex-col">
-        <header className="flex items-center justify-between px-5 py-5 text-xs uppercase tracking-[0.28em] text-white/58 md:px-8">
+      <section className="relative z-10 flex h-full flex-col overflow-hidden">
+        <header className="flex h-16 shrink-0 items-center justify-between px-5 text-xs uppercase tracking-[0.28em] text-white/58 md:px-8">
           <span>Mirror Self</span>
           <span>
             {phase === "boot"
@@ -379,7 +379,7 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
         </header>
 
         <div
-          className="relative flex flex-1 items-center justify-center overflow-y-auto px-4 pb-6"
+          className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden px-4 py-2"
           onClick={resetSelections}
         >
           <div className="radar-stage" onClick={resetSelections}>
@@ -548,7 +548,7 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
           )}
         </div>
 
-        <aside className={`${phase === "intro" ? "hidden" : "flex"} relative z-20 mx-auto mb-5 w-[min(1120px,calc(100%-32px))] flex-col gap-3 rounded-[8px] border border-white/14 bg-[#14142c]/72 p-4 shadow-2xl shadow-black/25 backdrop-blur-md md:flex-row md:items-center md:justify-between`}>
+        <aside className={`${phase === "intro" ? "hidden" : "flex"} relative z-20 mx-auto mb-3 max-h-[30vh] w-[min(1120px,calc(100%-32px))] shrink-0 flex-col gap-3 overflow-y-auto rounded-[8px] border border-white/14 bg-[#14142c]/72 p-4 shadow-2xl shadow-black/25 backdrop-blur-md md:flex-row md:items-center md:justify-between`}>
           <div className="max-w-3xl">
             <p className="text-xs uppercase tracking-[0.24em] text-white/52">
               {phase === "complete"

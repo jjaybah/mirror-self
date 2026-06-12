@@ -28,7 +28,7 @@ button {
 
 .radar-stage {
   position: relative;
-  width: min(76vw, 760px);
+  width: min(68vw, 64vh, 680px);
   aspect-ratio: 1;
   animation: stage-arrive 1200ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
@@ -398,7 +398,7 @@ button {
 
 @media (max-width: 720px) {
   .radar-stage {
-    width: min(112vw, 520px);
+    width: min(112vw, 54vh, 520px);
   }
 
   .theme-label,
