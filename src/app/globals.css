@@ -169,6 +169,11 @@ button {
   top: var(--y);
   z-index: 9;
   transform: translate(-50%, -50%);
+  transition:
+    left 680ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    top 680ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 260ms ease,
+    filter 260ms ease;
 }
 
 .theme-node {
@@ -222,6 +227,7 @@ button {
     color 180ms ease,
     opacity 540ms ease,
     transform 540ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: pill-float 7s ease-in-out infinite;
 }
 
 .theme-node-ready .thinking-dot {
@@ -266,7 +272,9 @@ button {
   text-transform: uppercase;
   opacity: 0;
   transition: opacity 260ms ease, filter 260ms ease, background-color 180ms ease, color 180ms ease;
-  animation: option-disclose 460ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--delay) both;
+  animation:
+    option-disclose 460ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--delay) both,
+    option-float 8s ease-in-out calc(var(--delay) + 900ms) infinite;
 }
 
 .layer-two {
@@ -382,6 +390,28 @@ button {
   to {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes pill-float {
+  0%,
+  100% {
+    margin-top: 0;
+  }
+
+  50% {
+    margin-top: -3px;
+  }
+}
+
+@keyframes option-float {
+  0%,
+  100% {
+    margin-top: 0;
+  }
+
+  50% {
+    margin-top: 3px;
   }
 }
 
