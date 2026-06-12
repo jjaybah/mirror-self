@@ -366,7 +366,7 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
 
       <section className="relative z-10 flex h-full flex-col overflow-hidden">
         <header className="flex h-16 shrink-0 items-center justify-between px-5 text-xs uppercase tracking-[0.28em] text-white/58 md:px-8">
-          <span>Mirror Self</span>
+          <span>NEXT THING</span>
           <span>
             {phase === "boot"
               ? "booting radar"
@@ -393,9 +393,74 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
               className="connection-lines"
               viewBox="0 0 100 100"
             >
+              <defs>
+                {selectedTheme && (
+                  <linearGradient
+                    gradientUnits="userSpaceOnUse"
+                    id="path-gradient-one"
+                    x1="50"
+                    x2={selectedTheme.x}
+                    y1="50"
+                    y2={selectedTheme.y}
+                  >
+                    <stop offset="0%" stopColor="rgba(255,255,255,0.2)" />
+                    <stop offset="58%" stopColor="rgba(245,191,75,0.5)">
+                      <animate
+                        attributeName="offset"
+                        dur="5s"
+                        repeatCount="indefinite"
+                        values="42%;70%;42%"
+                      />
+                    </stop>
+                    <stop offset="100%" stopColor="rgba(245,191,75,0.98)" />
+                  </linearGradient>
+                )}
+                {selectedTheme && selectedDirection && (
+                  <linearGradient
+                    gradientUnits="userSpaceOnUse"
+                    id="path-gradient-two"
+                    x1={selectedTheme.x}
+                    x2={selectedDirection.x}
+                    y1={selectedTheme.y}
+                    y2={selectedDirection.y}
+                  >
+                    <stop offset="0%" stopColor="rgba(255,255,255,0.18)" />
+                    <stop offset="58%" stopColor="rgba(245,191,75,0.52)">
+                      <animate
+                        attributeName="offset"
+                        dur="5s"
+                        repeatCount="indefinite"
+                        values="38%;72%;38%"
+                      />
+                    </stop>
+                    <stop offset="100%" stopColor="rgba(245,191,75,1)" />
+                  </linearGradient>
+                )}
+                {selectedDirection && selectedProduct && (
+                  <linearGradient
+                    gradientUnits="userSpaceOnUse"
+                    id="path-gradient-three"
+                    x1={selectedDirection.x}
+                    x2={selectedProduct.x}
+                    y1={selectedDirection.y}
+                    y2={selectedProduct.y}
+                  >
+                    <stop offset="0%" stopColor="rgba(255,255,255,0.16)" />
+                    <stop offset="62%" stopColor="rgba(245,191,75,0.55)">
+                      <animate
+                        attributeName="offset"
+                        dur="5s"
+                        repeatCount="indefinite"
+                        values="36%;76%;36%"
+                      />
+                    </stop>
+                    <stop offset="100%" stopColor="rgba(255,232,164,1)" />
+                  </linearGradient>
+                )}
+              </defs>
               {selectedTheme && (
                 <line
-                  className="connection-line"
+                  className="connection-line connection-line-one"
                   x1="50"
                   x2={selectedTheme.x}
                   y1="50"
@@ -404,7 +469,7 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
               )}
               {selectedTheme && selectedDirection && (
                 <line
-                  className="connection-line"
+                  className="connection-line connection-line-two"
                   x1={selectedTheme.x}
                   x2={selectedDirection.x}
                   y1={selectedTheme.y}
@@ -413,7 +478,7 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
               )}
               {selectedDirection && selectedProduct && (
                 <line
-                  className="connection-line"
+                  className="connection-line connection-line-three"
                   x1={selectedDirection.x}
                   x2={selectedProduct.x}
                   y1={selectedDirection.y}
@@ -530,16 +595,16 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
                 Introduce yourself
               </p>
               <label className="mt-3 block text-2xl font-semibold leading-tight text-white">
-                Tell Mirror Self about your work, hobbies, and interests.
+                Tell NEXT THING about your work, hobbies, and interests.
               </label>
               <textarea
-                className="mt-4 min-h-32 w-full resize-none rounded-[8px] border border-white/14 bg-white/10 p-4 text-sm leading-6 text-white outline-none transition placeholder:text-white/34 focus:border-[#f5bf4b]"
+                className="mt-4 min-h-32 w-full resize-none rounded-[22px] border border-white/14 bg-white/10 p-4 text-sm leading-6 text-white outline-none transition placeholder:text-white/34 focus:border-[#f5bf4b]"
                 onChange={(event) => setIntro(event.target.value)}
                 placeholder="I work in... I like... I keep thinking about..."
                 value={intro}
               />
               <button
-                className="mt-4 w-full rounded-[8px] bg-[#f5bf4b] px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] text-[#171323] transition hover:bg-white"
+                className="mt-4 w-full rounded-full bg-[#f5bf4b] px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] text-[#171323] transition hover:bg-white"
                 type="submit"
               >
                 Generate my map
@@ -548,7 +613,7 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
           )}
         </div>
 
-        <aside className={`${phase === "intro" ? "hidden" : "flex"} relative z-20 mx-auto mb-3 max-h-[30vh] w-[min(1120px,calc(100%-32px))] shrink-0 flex-col gap-3 overflow-y-auto rounded-[8px] border border-white/14 bg-[#14142c]/72 p-4 shadow-2xl shadow-black/25 backdrop-blur-md md:flex-row md:items-center md:justify-between`}>
+        <aside className={`${phase === "intro" ? "hidden" : "flex"} relative z-20 mx-auto mb-3 max-h-[30vh] w-[min(1120px,calc(100%-32px))] shrink-0 flex-col gap-3 overflow-y-auto rounded-[24px] border border-white/14 bg-[#14142c]/72 p-4 shadow-2xl shadow-black/25 backdrop-blur-md md:flex-row md:items-center md:justify-between`}>
           <div className="max-w-3xl">
             <p className="text-xs uppercase tracking-[0.24em] text-white/52">
               {phase === "complete"
@@ -595,7 +660,7 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
 
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             <button
-              className="rounded-[8px] border border-white/22 bg-white px-4 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#16162e] transition hover:bg-[#f5bf4b] disabled:cursor-not-allowed disabled:opacity-40"
+              className="rounded-full border border-white/22 bg-white px-5 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#16162e] transition hover:bg-[#f5bf4b] disabled:cursor-not-allowed disabled:opacity-40"
               disabled={!productPrompt}
               onClick={copyPrompt}
               type="button"
@@ -603,7 +668,7 @@ Make it visual, calm, accessible, and easy to understand. Use clear labels, stro
               {copied ? "Copied" : "Copy prompt"}
             </button>
             <a
-              className={`rounded-[8px] border border-white/18 px-4 py-3 text-center text-sm font-semibold uppercase tracking-[0.16em] transition ${
+              className={`rounded-full border border-white/18 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.16em] transition ${
                 productPrompt
                   ? "bg-[#f5bf4b] text-[#171323] hover:bg-white"
                   : "pointer-events-none bg-white/8 text-white/35"

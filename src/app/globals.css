@@ -99,11 +99,24 @@ button {
 }
 
 .connection-line {
-  stroke: rgb(245 191 75 / 0.92);
   stroke-linecap: round;
-  stroke-width: 0.9;
+  stroke-width: 1.5;
   filter: drop-shadow(0 0 10px rgb(245 191 75 / 0.34));
-  animation: line-draw 360ms ease both;
+  animation:
+    line-draw 520ms ease both,
+    line-breathe 5s ease-in-out infinite;
+}
+
+.connection-line-one {
+  stroke: url("#path-gradient-one");
+}
+
+.connection-line-two {
+  stroke: url("#path-gradient-two");
+}
+
+.connection-line-three {
+  stroke: url("#path-gradient-three");
 }
 
 .persona-node {
@@ -280,7 +293,7 @@ button {
   top: 50%;
   width: min(470px, calc(100% - 32px));
   border: 1px solid rgb(255 255 255 / 0.14);
-  border-radius: 8px;
+  border-radius: 24px;
   background: rgb(20 20 44 / 0.78);
   box-shadow: 0 26px 80px rgb(0 0 0 / 0.34);
   padding: 1.25rem;
@@ -381,6 +394,17 @@ button {
   to {
     opacity: 1;
     stroke-dasharray: 100 0;
+  }
+}
+
+@keyframes line-breathe {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+
+  50% {
+    opacity: 1;
   }
 }
 

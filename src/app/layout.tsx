@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Mirror Self",
+  title: "NEXT THING",
   description: "Turn your interests into a product idea and build prompt.",
 };
 
